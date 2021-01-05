@@ -1,15 +1,12 @@
 const express = require('express');
+const { User } = require('../models');
 const router = express.Router();
-const validateSession = require('../middleware/validate-session');
+// const validateSession = require('../middleware/validate-session');
 const pawPost = require('../db').import('../models/pawpost');
-router.get('/log', function(req, res){
-    res.send('Post created successfully')
-})
-
 
 // Create post
 
-router.post('/log', validateSession, (req,res)=> {
+router.post('/log', (req,res)=> {
     const blog = {
         title: req.body.pawpost.title,
         animal: req.body.pawpost.animal,
@@ -19,7 +16,7 @@ router.post('/log', validateSession, (req,res)=> {
         description: req.body.pawpost.description,
         date: req.body.pawpost.date,
         time: req.body.pawpost.time,
-        owner: req.user.id
+        newBlog: req.body.pawpost.newBlog
     }
     pawPost.create(blog)
     .then(pawpost => res.status(200).json(pawpost))
@@ -29,14 +26,14 @@ router.post('/log', validateSession, (req,res)=> {
 // get all posts entries
 
 router.get('/allLogs', (req, res) => {
-    pawPost.findAll()
+    pawPost.findAll({include: [{ model: User, as: "newBlog"}]})
     .then(pawpost => res.status(200).json(pawpost))
     .catch(err => res.status(500).json({error: err}))
 });
 
-// get posts by individual user
+// get posts by individual user, have to input id#
 
-router.get('/log:id', validateSession, (req, res) => {
+router.get('/:id',  (req, res) => {
     let userid = req.user.id
     pawPost.findAll({
         where: {owner:userid}
@@ -45,9 +42,9 @@ router.get('/log:id', validateSession, (req, res) => {
     .catch(err => res.status(500).json({error: err}))
 });
 
-// individual user can update post
+// individual user can update post, have to input id#
 
-router.put('log/:id', validateSession, (req, res) =>{
+router.put('/:id',  (req, res) =>{
     const updatePawPost = {
         title: req.body.pawpost.title,
         animal: req.body.pawpost.animal,
@@ -68,7 +65,7 @@ router.put('log/:id', validateSession, (req, res) =>{
 
 // delete post
 
-router.delete('/delete/:id', validateSession, (req, res) => {
+router.delete('/:id',  (req, res) => {
     const query = {where: {id: req.params.id, owner: req.user.id} };
 
     pawPost.destroy(query)

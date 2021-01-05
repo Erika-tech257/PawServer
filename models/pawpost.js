@@ -1,41 +1,42 @@
+const database = require('../db')
+const User = require('../db').import('./user')
+
 module.exports = (sequelize, DataTypes) => {
-    const pawpost = sequelize.define('pawpost', {
+    const PawPost = sequelize.define('pawpost', {
         title: {
             type: DataTypes.STRING,
-            allownull: false
+            allowNull: false
         },
         animal: {
             type: DataTypes.STRING,
-            allownull: false
+            allowNull: false
         },
         color: {
             type: DataTypes.STRING,
-            allownull: false
+            allowNull: false
         },
         city: {
             type: DataTypes.STRING,
-            allownull: false
+            allowNull: false
         },
         state: {
             type: DataTypes.STRING,
-            allownull: false
+            allowNull: false
         },
         description: {
             type: DataTypes.STRING,
-            allownull: false
+            allowNull: false
         },
         date: {
             type: DataTypes.STRING,
-            allownull: false
+            allowNull: false
         },
         time: {
             type: DataTypes.STRING,
-            allownull: false
-        },
-        owner: {
-            type: DataTypes.INTEGER
+            allowNull: false
         }
-    
     })
-    return pawpost;
-};
+    PawPost.belongsTo(User, {as: 'newPost'});
+
+    return PawPost;
+}

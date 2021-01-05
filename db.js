@@ -5,6 +5,7 @@ const database = new Sequelize(process.env.NAME, 'postgres',process.env.PASS, {
     dialect: 'postgres'
 });
 
+
 database.authenticate().then(
     function() {
         console.log('connected to postgres database')
