@@ -8,6 +8,7 @@ const { PawPost, Comments } = require('../models');
 
 
 
+
 router.post('/signup', (req, res) => {
     User.create({
         email: req.body.user.email,
@@ -31,11 +32,9 @@ router.post('/signup', (req, res) => {
 router.post('/login', (req, res) => {
     User.findOne({
         where:
-            { email: req.body.user.email }
-    })
+            { email: req.body.user.email}})
         .then(user => {
             if (user) {
-                
                 bcrypt.compare(req.body.user.password, user.password, (err, matches) => {
                     if (matches) {
                         const token = jwt.sign({ id: user.id }, process.env.JWT, { expiresIn: '7d' });

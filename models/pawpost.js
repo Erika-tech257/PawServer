@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     })
-    PawPost.belongsTo(User, {as: 'newPost'});
+    PawPost.belongsTo(User, {as: 'newPost', foreignKey:"owner"});
 
     return PawPost;
 }

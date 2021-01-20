@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const comments = require('../db').import('../models/comments');
+const validateSession = require('../middleware/validate-session');
 
 // create a comment under post
-router.post('/newComment', (req, res) => {
+router.post('/newComment', validateSession, (req, res) => {
     const reply = {
-        description: req.body.comments.description, userId: req.body.user
+        description: req.body.comments.description, 
+        userId: req.body.user
     }
     comments.create(reply)
     .then(comments => res.status(200).json(comments))
@@ -14,7 +16,7 @@ router.post('/newComment', (req, res) => {
 
 // get user comment
 
-router.get('/newComment', (req, res) => {
+router.get('/newComment', validateSession, (req, res) => {
     comments.findOne({
         where: {
             userId: req.user.id
@@ -30,7 +32,7 @@ router.get('/newComment', (req, res) => {
 
 // update comment
 
-router.put('/newComment', (req, res) => {
+router.put('/newComment', validateSession, (req, res) => {
     comments.update(req.body.comments.userName, { where: {userId: req.user.id}})
 
     .then(function commentUpdated(data) {
@@ -41,7 +43,7 @@ router.put('/newComment', (req, res) => {
     }) .catch(err => res.status(500).json('User comment not updated', err))
 })
 
-router.delete('/newComment', (req, res) => {
+router.delete('/newComment', validateSession, (req, res) => {
     comments.destroy(req.body.comments.userName, { where: {userId: req.user.id}})
 
     .then(function commentUpdated(data) {

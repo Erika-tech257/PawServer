@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     })
+    // foreignKey: 'owner'
     Comments.belongsTo(User, {as: 'reply'});
     Comments.belongsTo(PawPost, {as:'PawPost'})
   

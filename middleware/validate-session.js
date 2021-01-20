@@ -1,35 +1,52 @@
 const jwt = require('jsonwebtoken');
 const User = require('../db').import('../models/user');
 
-const validateSession = (req, res, next) => {
-    const token = req.headers.authorization;
-    console.log('token -->', token);
+// const validateSession = (req, res, next) => {
+//     const token = req.headers.authorization;
+//     console.log('token -->', token);
    
-    if (!token) {
-        return res.status(403).send({ auth: false, message: 'No token provided'})
-    } else {
-        jwt.verify(token, process.env.JWT, (err, decodeToken) => {
-            console.log('decodeToken -->', decodeToken);
+//     if (!token) {
+//         return res.status(403).send({ auth: false, message: 'No token provided'})
+//     } else {
+//         jwt.verify(token, process.env.JWT, (err, decodeToken) => {
+//             console.log('decodeToken -->', decodeToken);
 
-            if (!err && jwt.decodeToken) {
-                User.findOne({
-                    where: {
-                        id: decodeToken.id
-                    }
-                })
-                    .then(user => {
-                        console.log('user -->', user);
-                        if (!user) throw err;
-                        console.log('req -->', req);
-                        req.user = user;
-                        return next();
-                    })
-                    .catch(err => next(err));
-            } else {
-                req.errors = err;
-                return res.status(500).send('Not Authorized');
+//             if (!err && jwt.decodeToken) {
+//                 User.findOne({
+//                     where: {
+//                         id: decodeToken.id
+//                     }
+//                 })
+//                     .then(user => {
+//                         console.log('user -->', user);
+//                         if (!user) throw err;
+//                         console.log('req -->', req);
+//                         req.user = user;
+//                         return next();
+//                     })
+//                     .catch(err => next(err));
+//             } else {
+//                 req.errors = err;
+//                 return res.status(500).send('Not Authorized');
+//             }
+//         })
+//     }
+// }
+// module.exports = validateSession;
+module.exports = async(req, res, next) => {
+    const token = req.headers.authorization
+    try {
+        const decoded = await jwt.verify (token, process.env.JWT)
+        const user = await User.findOne ({
+            where:{
+                id:decoded.id
             }
         })
+        if(!user) throw new Error("User not found")
+        req.user = user
+        next()
+    }
+    catch(err){
+        res.status(500).json(err)
     }
 }
-module.exports = validateSession;
