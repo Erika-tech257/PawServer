@@ -6,10 +6,11 @@ const pawPost = require('../db').import('../models/pawpost');
 const user = require('../db').import('../models/user');
 
 // create a comment under post
-router.post('/new/comment', validateSession, (req, res) => {
+router.post('/new/:pawPost/comment', validateSession, (req, res) => {
     const reply = {
         description: req.body.comments.description, 
-        owner: req.user.id
+        owner: req.user.id,
+        PawPostId: req.params.pawPost
     }
     comments.create(reply)
     .then(comments => res.status(200).json(comments))
@@ -21,21 +22,21 @@ router.post('/new/comment', validateSession, (req, res) => {
 router.get('/my/:id', validateSession, (req, res) => {
     comments.findOne({
         where: {
-            userId: req.user.id
+            owner: req.user.id
         }
     })
     .then(function commentSuccess(data) {
         res.status(200).json({
-            message: 'User comment found',
+            message: data === null?'no comments found':'comments found',
             data: data
         })
-    }) .catch(err => res.status(500).json('User comment not found', err))
+    }) .catch(err => res.status(500).json({error: err}))
 })
 
 // update comment
 
 router.put('/comment', validateSession, (req, res) => {
-    comments.update(req.body.comments.userName, { where: {userId: req.user.id}})
+    comments.update(req.body.comments.userName, { where: {owner: req.user.id}})
 
     .then(function commentUpdated(data) {
         res.status(200).json({
@@ -57,4 +58,4 @@ router.delete('/comment', validateSession, (req, res) => {
 })
 
 
-module.exports = comments
+module.exports = router
