@@ -10,14 +10,14 @@ router.post('/new/:pawPost/comment', validateSession, (req, res) => {
     const reply = {
         description: req.body.comments.description, 
         owner: req.user.id,
-        PawPostId: req.params.pawPost
+        pawpostId: req.params.pawPost
     }
     comments.create(reply)
     .then(comments => res.status(200).json(comments))
     .catch(err => res.status(500).json({error: err}))
 })
 
-// get comments
+// get comments by user
 
 router.get('/my/:id', validateSession, (req, res) => {
     comments.findOne({
@@ -31,6 +31,14 @@ router.get('/my/:id', validateSession, (req, res) => {
             data: data
         })
     }) .catch(err => res.status(500).json({error: err}))
+})
+
+// get all comments
+
+router.get('/all', (req,res) => {
+    comments.findAll()
+    .then(comments => res.status(200).json(comments))
+    .catch(err => res.status(500).json({error: err}))
 })
 
 // update comment

@@ -3,6 +3,7 @@ const { User } = require('../models');
 const router = express.Router();
 const validateSession = require('../middleware/validate-session');
 const pawPost = require('../db').import('../models/pawpost');
+const comments= require('../db').import('../models/comments')
 
 // Create post
 
@@ -28,7 +29,9 @@ router.post('/log', validateSession, (req,res)=> {
 // {include: [{ model: User, as: "newPost"}]}
 
 router.get('/allLogs', (req, res) => {
-    pawPost.findAll()
+    pawPost.findAll({
+        include:['comments']
+    })
     .then(pawpost => res.status(200).json(pawpost))
     .catch(err => res.status(500).json({error: err}))
 });

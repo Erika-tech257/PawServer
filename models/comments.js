@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     })
     // foreignKey: 'owner'
     Comments.belongsTo(User, {as: 'reply', foreignKey:'owner'});
-    Comments.belongsTo(PawPost, {as:'PawPost'})  //In PG Admin it is PawPostId
+    // Comments.belongsTo(PawPost, {as:'PawPost'})  //In PG Admin it is PawPostId
+    PawPost.hasMany(Comments,{as:'comments'})
   
     return Comments;
 }
