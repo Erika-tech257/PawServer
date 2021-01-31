@@ -24,8 +24,8 @@ db.authenticate()
 .then(() => db.sync({alter: true}))
 // alter:true checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model.
 .then(() => {
-app.listen(5000, function(){
-    console.log('App listening')})
+app.listen(process.env.PORT,()=> {
+    console.log(`App is listening on port ${process.env.PORT}`)})
 })
 .catch(err => {
     console.log('[server]: Server Crashed')
