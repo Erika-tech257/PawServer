@@ -32,7 +32,8 @@ router.post('/signup', (req, res) => {
 router.post('/login', (req, res) => {
     User.findOne({
         where:
-            { email: req.body.user.email}})
+            { email: req.body.user.email }
+    })
         .then(user => {
             if (user) {
                 bcrypt.compare(req.body.user.password, user.password, (err, matches) => {
@@ -60,7 +61,7 @@ router.post('/login', (req, res) => {
 // Get all users 
 
 router.get('/all', (req, res) => {
-    User.findAll({include: [{model: PawPost, as: 'newBlog'}, {model: Comments, as: "coms"}]})
+    User.findAll({ include: [{ model: PawPost, as: 'newBlog' }, { model: Comments, as: "coms" }] })
         .then(user => res.status(200).json({ user: user }))
         .catch(err => res.status(500).json({ error: err }))
 })
@@ -71,9 +72,9 @@ router.get('/cloudsign', validateSession, async (req, res) => {
     try {
         const ts = Math.floor(new Date().getTime() / 1000).toString()
 
-
+        console.log(process.env.CLOUDINARY_SECRET)
         const sig = cloudinary.utils.api_sign_request(
-            {timestamp: ts, upload_preset: 'uuhz0rq7'},
+            { timestamp: ts, upload_preset: 'uuhz0rq7' },
             process.env.CLOUDINARY_SECRET
 
         )
@@ -83,14 +84,14 @@ router.get('/cloudsign', validateSession, async (req, res) => {
         })
     } catch (err) {
         res.status(500).json({
-            message: 'sign failed'
+            err
         })
     }
 })
 
 router.put('/imageset', validateSession, async (req, res) => {
     try {
-        const u = await User.findOne({where: {id: req.user.id}})
+        const u = await User.findOne({ where: { id: req.user.id } })
 
         const result = await u.update({
             avatar: req.body.url
@@ -100,7 +101,7 @@ router.put('/imageset', validateSession, async (req, res) => {
             message: 'avatar url saved',
             result
         })
-    } catch (err){
+    } catch (err) {
         res.status(500).json({
             message: 'failed to set image'
         })
