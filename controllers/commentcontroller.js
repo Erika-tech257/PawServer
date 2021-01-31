@@ -43,8 +43,8 @@ router.get('/all', (req,res) => {
 
 // update comment
 
-router.put('/comment', validateSession, (req, res) => {
-    comments.update(req.body.comments.userName, { where: {owner: req.user.id}})
+router.put('/my/:id', validateSession, (req, res) => {
+    comments.update(req.body.comments.description, { where: {owner: req.user.id}})
 
     .then(function commentUpdated(data) {
         res.status(200).json({
@@ -54,10 +54,10 @@ router.put('/comment', validateSession, (req, res) => {
     }) .catch(err => res.status(500).json('User comment not updated', err))
 })
 
-router.delete('/comment', validateSession, (req, res) => {
-    comments.destroy(req.body.comments.userName, { where: {userId: req.user.id}})
+router.delete('/my/:id', validateSession, (req, res) => {
+    comments.destroy(req.body.comments.description, { where: {owner: req.user.id}})
 
-    .then(function commentUpdated(data) {
+    .then(function commentDeleted(data) {
         res.status(200).json({
             message: 'User comment deleted',
             data: data
