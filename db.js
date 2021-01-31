@@ -1,19 +1,20 @@
-const Sequelize = require('sequelize'); 
+const Sequelize = require('sequelize');
 
 const database = new Sequelize(process.env.DATABASE_URL || `postgresql://postgres
-:${encodeURIComponent(process.env.PASS)}@localhost/PawServer`,{
-    dialect: 'postgres'
-});
+:${encodeURIComponent(process.env.PASS)}@localhost/PawServer`,
+    {
+        dialect: 'postgres'
+    });
 
 
 database.authenticate().then(
-    function() {
+    function () {
         console.log('connected to postgres database')
     },
-    function(err){
+    function (err) {
         console.log(err);
     }
 )
 
-module.exports = database; 
+module.exports = database;
 
