@@ -36,7 +36,7 @@ router.get('/my/:id', validateSession, (req, res) => {
 // get all comments
 
 router.get('/all', (req,res) => {
-    comments.findAll()
+    comments.findAll({include:'reply'})
     .then(comments => res.status(200).json(comments))
     .catch(err => res.status(500).json({error: err}))
 })

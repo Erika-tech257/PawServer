@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../db').import('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+const cloudinary = require ('cloudinary')
 const validateSession = require('../middleware/validate-session');
 const { PawPost, Comments } = require('../models');
 

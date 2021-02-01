@@ -30,7 +30,7 @@ router.post('/log', validateSession, (req,res)=> {
 
 router.get('/allLogs', (req, res) => {
     pawPost.findAll({
-        include:['comments']
+        include:['comments','newPost']
     })
     .then(pawpost => res.status(200).json(pawpost))
     .catch(err => res.status(500).json({error: err}))
