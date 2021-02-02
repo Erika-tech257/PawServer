@@ -60,13 +60,13 @@ router.post('/login', (req, res) => {
 
 // Get all users 
 
-// router.get('/all', (req, res) => {
-//     User.findAll({ 
-//         include:['newPost','comments'] 
-//     })
-//         .then(user => res.status(200).json({ user: user }))
-//         .catch(err => res.status(500).json({ error: err }))
-// })
+router.get('/all', (req, res) => {
+    User.findAll({ 
+        include:['newPost','comments'] 
+    })
+        .then(user => res.status(200).json({ user: user }))
+        .catch(err => res.status(500).json({ error: err }))
+})
 
 // cloudinary endpoints for user to upload image
 
