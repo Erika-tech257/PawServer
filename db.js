@@ -4,10 +4,10 @@ const database = new Sequelize(process.env.DATABASE_URL || `postgresql://postgre
     {
         dialect: 'postgres',
         dialectOptions: {
-            // ssl: {
-            //   require: true,
-            //   rejectUnauthorized: false, // <<<<<<< YOU NEED THIS TO FIX UNHANDLED REJECTION 
-            // },
+            ssl: {
+              require: true,
+              rejectUnauthorized: false, // <<<<<<< YOU NEED THIS TO FIX UNHANDLED REJECTION 
+            },
           },
     });
 
