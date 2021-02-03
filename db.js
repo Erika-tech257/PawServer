@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const database = new Sequelize(process.env.DATABASE_URL || `postgresql://postgres:${encodeURIComponent(process.env.PASS)}@localhost/paws`,
+const database = new Sequelize(process.env.DATABASE_URL,
     {
         dialect: 'postgres',
         dialectOptions: process.env.DATABASE_URL.includes("postgres")? {}: {
