@@ -92,6 +92,7 @@ router.get('/cloudsign', validateSession, async (req, res) => {
 router.put('/imageset', validateSession, async (req, res) => {
     try {
         const u = await User.findOne({ where: { id: req.user.id } })
+        // {owner:userid,id:req.params.id}
 
         const result = await u.update({
             avatar: req.body.url

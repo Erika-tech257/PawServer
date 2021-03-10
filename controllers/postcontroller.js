@@ -49,6 +49,39 @@ router.get('/my/:id', validateSession, (req, res) => {
 
 // individual user can update post, have to input id#
 
+
+
+// delete post
+
+router.delete('/:id', validateSession,  (req, res) => {
+    const query = {where: {id: req.params.id, owner: req.user.id} };
+
+    pawPost.destroy(query)
+    .then(()=> res.status(200).json({ message: 'Post successfully removed'}))
+    .catch((err)=> res.status(500).json({ error: err}));
+});
+
+
+router.put('/imageset', validateSession, async (req, res) => {
+    try {
+        const p = await pawPost.findOne({ where: { owner: req.user.id, id:req.body.id } })
+        // {owner:userid,id:req.params.id}
+
+        const result = await p.update({
+            image: req.body.url
+        })
+
+        res.status(200).json({
+            message: 'image url saved',
+            result
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: 'failed to set image'
+        })
+    }
+})
+
 router.put('/:id', validateSession,  (req, res) =>{
     const updatePawPost = {
         title: req.body.pawpost.title,
@@ -68,13 +101,4 @@ router.put('/:id', validateSession,  (req, res) =>{
     .catch((err) => res.status(500).json({ error: err }));
 });
 
-// delete post
-
-router.delete('/:id', validateSession,  (req, res) => {
-    const query = {where: {id: req.params.id, owner: req.user.id} };
-
-    pawPost.destroy(query)
-    .then(()=> res.status(200).json({ message: 'Post successfully removed'}))
-    .catch((err)=> res.status(500).json({ error: err}));
-});
 module.exports = router

@@ -1,3 +1,4 @@
+// const { DataTypes } = require('sequelize/types');
 const database = require('../db')
 const User = require('../db').import('./user')
 
@@ -34,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
         time: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        
+        image: {
+            type: DataTypes.STRING,
+            allowNull:true
         }
     })
     PawPost.belongsTo(User, {as: 'newPost', foreignKey:"owner"});
